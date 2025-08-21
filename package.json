@@ -20,7 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "denoise-plugin": "file:denoise-plugin-1.0.0.tgz",
-    "ecprt-client-sdk": "file:ecprt-client-sdk-2.1.3.tgz",
+    "ecprt-client-sdk": "https://artifactory-builds.oci.oraclecorp.com/cgbu_ecprt-release-npm-local/ecprt-livekit-client-sdk-js/ecprt-client-sdk-25.3.8.tgz",
     "gh-pages": "^6.3.0",
     "typescript": "4.9.5"
   },
