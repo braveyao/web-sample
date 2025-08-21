@@ -87,6 +87,17 @@
             <option value="180">180</option>
           </select>
         </div>
+        <div>
+          <label for="noise-suppression" class="form-check-label"> Noise Suppression </label>
+          <select
+                  id="noise-suppression"
+                  class="custom-select"
+                  style="width: auto"
+          >
+            <option value="rnnoise" selected>RNNoise</option>
+            <option value="deepfilter">DeepFilterNet</option>
+          </select>
+        </div>
         <!--<div>
           <select id="preferred-codec" class="custom-select" style="width: auto">
             <option value="vp8" selected>VP8</option>

@@ -288,9 +288,14 @@ const appActions = {
       .on(RoomEvent.LocalTrackPublished, async(pub) => {
         if (pub.source === Track.Source.Microphone &&
           pub.track instanceof LocalAudioTrack) {
-            const denoiseProcessor = new DenoiseProcessor({ deepfilter: {enable: true} });
-            //const denoiseProcessor = new DenoiseProcessor();
-            console.log("Enabling noise suppression for local audio track");
+            // Read the selected noise suppression mode
+            const noiseSuppression = (<HTMLSelectElement>$('noise-suppression')).value;
+            const useDeepFilter = noiseSuppression === 'deepfilter';
+            
+            const denoiseProcessor = new DenoiseProcessor({ 
+              deepfilter: { enable: useDeepFilter }
+            });
+            
             await pub.track.setProcessor(denoiseProcessor);
             await denoiseProcessor.setEnabled(true);
           }
