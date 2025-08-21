@@ -30,7 +30,7 @@ import {
   supportsVP9,
 
 } from 'ecprt-client-sdk';
-import type { ChatMessage, DataPacket_Kind, SimulationScenario } from 'ecprt-client-sdk';
+import type { ChatMessage, SimulationScenario } from 'ecprt-client-sdk';
 
 const $ = <T extends HTMLElement>(id: string) => document.getElementById(id) as T;
 
@@ -273,7 +273,6 @@ const appActions = {
     room
       .on(RoomEvent.ParticipantConnected, participantConnected)
       .on(RoomEvent.ParticipantDisconnected, participantDisconnected)
-      .on(RoomEvent.DataReceived, handleData) //TODO REMOVE
       .on(RoomEvent.ChatMessage, handleChatMessage)
       .on(RoomEvent.Disconnected, handleRoomDisconnect)
       .on(RoomEvent.Reconnecting, () => appendLog('Reconnecting to room'))
@@ -645,26 +644,6 @@ window.onload = function() {
 window.appActions = appActions;
 
 // --------------------------- event handlers ------------------------------- //
-
-function handleData(msg: Uint8Array, participant?: RemoteParticipant, kind?: DataPacket_Kind, topic?: string,destination_sids?: string[]) {
-  console.log("handleData received ....")
-  const str = state.decoder.decode(msg);
-  const chat = <HTMLTextAreaElement>$('chat');
-  let from = 'Server';
-  let notion = 'Everyone'
-  if (participant) {
-    if (participant.name) {
-      from = participant.name;
-    }
-    else {
-      from = participant.identity;
-    }
-  }
-  if (!currentRoom) return;
-  notion = destination_sids && destination_sids?.length > 0 ? 'Me (Direct message)' : 'Everyone'
-  chat.value += `${from} to ${notion}: ${str}\n`;
-}
-
 function handleChatMessage(msg: ChatMessage, participant?: LocalParticipant | RemoteParticipant) {
   (<HTMLTextAreaElement>$('chat')).value +=
     `${participant?.identity}${participant instanceof LocalParticipant ? ' (me)' : ''}: ${msg.message}\n`;
@@ -1023,10 +1002,18 @@ function renderScreenShare(room: Room) {
     };
     videoElm.onplaying = () => {
       console.log("Inside onplay")
-      infoElm.innerHTML = `Screenshare from ${participant.identity}`;
+      if (participant) {
+        infoElm.innerHTML = `Screenshare from ${participant.identity}`;
+      } else {
+        infoElm.innerHTML = `Screenshare from unknown participant`;
+      }
     };
     const infoElm = $('screenshare-info')!;
-    infoElm.innerHTML = `Screenshare from ${participant.identity}`;
+    if (participant) {
+      infoElm.innerHTML = `Screenshare from ${participant.identity}`;
+    } else {
+      infoElm.innerHTML = `Screenshare from unknown participant`;
+    }
   } else {
     div.style.display = 'none';
   }

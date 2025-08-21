@@ -11,7 +11,7 @@
   "scripts": {
     "bootstrap": "npm install",
     "clean": "tsc --build --clean",
-    "build": "tsc --build",
+    "build": "vite build",
     "sample": "vite serve --port 8080 --open",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
