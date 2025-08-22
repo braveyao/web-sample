@@ -293,9 +293,9 @@ const appActions = {
             const useDeepFilter = noiseSuppression === 'deepfilter';
             
             const denoiseProcessor = new DenoiseProcessor({ 
-              deepfilter: { enable: useDeepFilter }
+              deepfilter: { enable: useDeepFilter },
+              wasmBasePath: window.location.pathname
             });
-            
             await pub.track.setProcessor(denoiseProcessor);
             await denoiseProcessor.setEnabled(true);
           }
