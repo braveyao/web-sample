@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>ECPRT Web sample app</title>
+  <title>Web sample app</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
 
@@ -17,11 +17,11 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8">
-      <h2>ECPRT Web Sample App</h2>
+      <h2>Web Sample App</h2>
       <br />
       <div id="connect-area">
         <div>
-          <b>ECPRT URL</b>
+          <b>RTCMS URL</b>
         </div>
         <div>
           <input type="text" class="form-control" id="url" value="ws://localhost:7880" />
@@ -93,9 +93,11 @@
                   id="noise-suppression"
                   class="custom-select"
                   style="width: auto"
+                  onchange="appActions.changeNoiseSuppression()"
           >
-            <option value="rnnoise" selected>RNNoise</option>
-            <option value="deepfilter">DeepFilterNet</option>
+            <option value="deepfilter" selected>DeepFilterNet</option>
+            <option value="rnnoise">RNNoise</option>
+            <option value="webrtc">WebRTC</option>
           </select>
         </div>
         <!--<div>

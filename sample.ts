@@ -197,6 +197,8 @@ const appActions = {
     //const autoSubscribe = true;
       //const e2eeEnabled = (<HTMLInputElement>$('e2ee')).checked;
     const audioOutputId = (<HTMLSelectElement>$('audio-output')).value;
+    const noiseSuppression = (<HTMLSelectElement>$('noise-suppression')).value;
+
     setLogLevel(LogLevel.debug);
     updateSearchParams(url, token, cryptoKey);
     switch (quality) {
@@ -227,7 +229,10 @@ const appActions = {
       },
       videoCaptureDefaults: {
         resolution: q,
-      }
+      },
+      audioCaptureDefaults: {
+        noiseSuppression: noiseSuppression === 'webrtc',
+      },
       /*e2ee: e2eeEnabled
         ? { keyProvider: state.e2eeKeyProvider, worker: new E2EEWorker() }
         : undefined,*/
@@ -289,16 +294,25 @@ const appActions = {
         if (pub.source === Track.Source.Microphone &&
           pub.track instanceof LocalAudioTrack) {
             // Read the selected noise suppression mode
-            const noiseSuppression = (<HTMLSelectElement>$('noise-suppression')).value;
-            const useDeepFilter = noiseSuppression === 'deepfilter';
-            
-            const denoiseProcessor = new DenoiseProcessor({ 
-              deepfilter: { enable: useDeepFilter },
-              wasmBasePath: window.location.pathname
-            });
-            await pub.track.setProcessor(denoiseProcessor);
-            await denoiseProcessor.setEnabled(true);
-          }
+            const noiseSuppression = (<HTMLSelectElement>$('noise-suppression')).value;            
+            if (noiseSuppression !== 'webrtc') {
+              try {
+                const useDeepFilter = noiseSuppression === 'deepfilter';
+
+                const denoiseProcessor = new DenoiseProcessor({
+                  deepfilter: { enable: useDeepFilter },
+                  wasmBasePath: window.location.pathname
+                });
+                await pub.track.setProcessor(denoiseProcessor);
+                await denoiseProcessor.setEnabled(true);
+                
+              } catch (error) {
+                console.error("Failed to initialize denoise processor:", error);
+              }
+            }
+            console.log("Denoise mode successfully applied:", noiseSuppression);            
+        }
+
         const track = pub.track as LocalAudioTrack;
 
         if (track instanceof LocalAudioTrack) {
@@ -627,6 +641,44 @@ const appActions = {
           track.setVideoFPS(fps);
         });
       });
+    }
+  },
+
+  changeNoiseSuppression: async () => {
+    if (!currentRoom) {
+      console.log('Not connected to room');
+      return;
+    }
+
+    const localParticipant = currentRoom.localParticipant;
+    const audioTrack = Array.from(localParticipant.trackPublications.values())
+      .find(pub => pub.source === Track.Source.Microphone && pub.track instanceof LocalAudioTrack);
+
+    if (!audioTrack?.track) {
+      console.log('No microphone track found');
+      return;
+    }
+
+    const noiseSuppression = (<HTMLSelectElement>$('noise-suppression')).value;
+    if (noiseSuppression === 'webrtc') {
+      console.warn('Cannot switch to WebRTC: WebRTC noise suppression must be set when creating the audio track.');
+      return;
+    }
+
+    const { DenoiseProcessor } = await import('denoise-plugin');
+    try {
+      // Only handle switching between RNNoise and DeepFilterNet
+      const useDeepFilter = noiseSuppression === 'deepfilter';
+      const denoiseProcessor = new DenoiseProcessor({
+        deepfilter: { enable: useDeepFilter },
+        wasmBasePath: window.location.pathname
+      });
+      await (audioTrack.track as any).setProcessor(denoiseProcessor);
+      await denoiseProcessor.setEnabled(true);
+      
+      console.log('Noise suppression mode changed to:', noiseSuppression);
+    } catch (error) {
+      console.error('Failed to change noise suppression mode:', error);
     }
   },
 };
