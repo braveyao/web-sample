@@ -11,7 +11,7 @@
           integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
           crossorigin="anonymous"
   />
-  <script type="module" crossorigin src="/web-sample/assets/index-CTbeZOEa.js"></script>
+  <script type="module" crossorigin src="/web-sample/assets/index-CpZ0ka5E.js"></script>
   <link rel="modulepreload" crossorigin href="/web-sample/assets/ecprt-sdk-BDMqnLva.js">
   <link rel="stylesheet" crossorigin href="/web-sample/assets/index-DZ3mh4hS.css">
 </head>
@@ -73,42 +73,88 @@
           <label for="e2ee" class="form-check-label"> E2E Encryption </label>
         </div>
         <div>
-          <select id="preferred-codec" class="custom-select" style="width: auto"></select>
+          <input type="checkbox" class="form-check-input" id="echo-cancellation" checked />
+          <label for="echo-cancellation" class="form-check-label"> AEC </label>
         </div>
         <div>
-          <label for="qulaity" class="form-check-label"> PreferredQuality </label>
+          <input type="checkbox" class="form-check-input" id="noise-suppression" />
+          <label for="noise-suppression" class="form-check-label"> ANS </label>
+        </div>
+        <div>
+          <input type="checkbox" class="form-check-input" id="auto-gain-control" />
+          <label for="auto-gain-control" class="form-check-label"> AGC </label>
+        </div>
+      </div>
+
+      <!-- media preferences -->
+      <div id="media-preferences-area">
+        <div class="row">
+          <div class="col-md-4">
+            <label for="preferred-codec"> Preferred Codec </label>
+            <select id="preferred-codec" class="custom-select" style="width: 100%"></select>
+          </div>
+          <div class="col-md-4">
+            <label for="preferred-quality"> Preferred Quality </label>
+            <select
+                    id="preferred-quality"
+                    class="custom-select"
+                    style="width: 100%"
+            >
+              <option value="1080">1080</option>
+              <option value="720" selected>720</option>
+              <option value="540">540</option>
+              <option value="360">360</option>
+              <option value="180">180</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="denoise-mode"> Denoise Mode </label>
+            <select
+                    id="denoise-mode"
+                    class="custom-select"
+                    style="width: 100%"
+                    onchange="appActions.changeNoiseSuppression()"
+            >
+              <option value="deepfilter" selected>DeepFilterNet</option>
+              <option value="rnnoise">RNNoise</option>
+              <option value="webrtc">WebRTC</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- inputs -->
+      <div id="inputs-area">
+        <div>
+          <label for="video-input">Camera</label>
           <select
-                  id="preferred-quality"
+                  id="video-input"
                   class="custom-select"
-                  style="width: auto"
+                  onchange="appActions.handleDeviceSelected(event)"
           >
-            <option value="1080">1080</option>
-            <option value="720" selected>720</option>
-            <option value="540">540</option>
-            <option value="360">360</option>
-            <option value="180">180</option>
+            <option selected>Video Input (default)</option>
           </select>
         </div>
         <div>
-          <label for="noise-suppression" class="form-check-label"> Noise Suppression </label>
+          <label for="audio-input">Microphone</label>
           <select
-                  id="noise-suppression"
+                  id="audio-input"
                   class="custom-select"
-                  style="width: auto"
-                  onchange="appActions.changeNoiseSuppression()"
+                  onchange="appActions.handleDeviceSelected(event)"
           >
-            <option value="deepfilter" selected>DeepFilterNet</option>
-            <option value="rnnoise">RNNoise</option>
-            <option value="webrtc">WebRTC</option>
+            <option selected>Audio Input (default)</option>
           </select>
         </div>
-        <!--<div>
-          <select id="preferred-codec" class="custom-select" style="width: auto">
-            <option value="vp8" selected>VP8</option>
-            <option value="h264">H.264</option>
-            <option value="av1">AV1</option>
+        <div>
+          <label for="audio-output">Speaker</label>
+          <select
+                  id="audio-output"
+                  class="custom-select"
+                  onchange="appActions.handleDeviceSelected(event)"
+          >
+            <option selected>Audio Output (default)</option>
           </select>
-        </div>-->
+        </div>
       </div>
 
       <!-- actions -->
@@ -241,36 +287,6 @@
              <option value="15">15</option>
              <option value="8">8</option>
            </select>-->
-        </div>
-      </div>
-
-      <div id="inputs-area">
-        <!-- <div>
-           <select
-             id="video-input"
-             class="custom-select"
-             onchange="appActions.handleDeviceSelected(event)"
-           >
-             <option selected>Video Input (default)</option>
-           </select>
-         </div>
-         <div>
-           <select
-             id="audio-input"
-             class="custom-select"
-             onchange="appActions.handleDeviceSelected(event)"
-           >
-             <option selected>Audio Input (default)</option>
-           </select>
-         </div>-->
-        <div>
-          <select
-                  id="audio-output"
-                  class="custom-select"
-                  onchange="appActions.handleDeviceSelected(event)"
-          >
-            <option selected>Audio Output (default)</option>
-          </select>
         </div>
       </div>
     </div>
