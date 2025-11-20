@@ -31,6 +31,13 @@
   margin-bottom: 10px;
 }
 
+#media-preferences-area {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1.25rem;
+  margin-bottom: 10px;
+}
+
 #chat-input-area {
   margin-top: 1.2rem;
   display: grid;

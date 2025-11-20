@@ -197,6 +197,11 @@ const appActions = {
     //const autoSubscribe = true;
       //const e2eeEnabled = (<HTMLInputElement>$('e2ee')).checked;
     const audioOutputId = (<HTMLSelectElement>$('audio-output')).value;
+    const videoInputId = (<HTMLSelectElement>$('video-input')).value;
+    const audioInputId = (<HTMLSelectElement>$('audio-input')).value;
+    const echoCancellationEnabled = (<HTMLInputElement>$('echo-cancellation')).checked;
+    const noiseSuppressionEnabled = (<HTMLInputElement>$('noise-suppression')).checked;
+    const autoGainControlEnabled = (<HTMLInputElement>$('auto-gain-control')).checked;
 
     setLogLevel(LogLevel.debug);
     updateSearchParams(url, token, cryptoKey);
@@ -227,7 +232,14 @@ const appActions = {
         scalabilityMode: 'L3T3_KEY',
       },
       videoCaptureDefaults: {
+        deviceId: videoInputId ? { exact: videoInputId } : undefined,
         resolution: q,
+      },
+      audioCaptureDefaults: {
+        deviceId: audioInputId ? { exact: audioInputId } : undefined,
+        echoCancellation: echoCancellationEnabled,
+        noiseSuppression: noiseSuppressionEnabled,
+        autoGainControl: autoGainControlEnabled,
       },
       /*e2ee: e2eeEnabled
         ? { keyProvider: state.e2eeKeyProvider, worker: new E2EEWorker() }
@@ -287,26 +299,39 @@ const appActions = {
       .on(RoomEvent.TranscriptionReceived, updateTranscriptions)
 
       .on(RoomEvent.LocalTrackPublished, async(pub) => {
-        if (pub.source === Track.Source.Microphone &&
-          pub.track instanceof LocalAudioTrack) {
+        // Set default device IDs based on published tracks
+        if (pub.track) {
+          if (pub.source === Track.Source.Microphone && pub.track instanceof LocalAudioTrack) {
+            const deviceId = pub.track.mediaStreamTrack.getSettings().deviceId;
+            if (deviceId) {
+              state.defaultDevices.set('audioinput', deviceId);
+            }
+
             // Read the selected noise suppression mode
-            const noiseSuppression = (<HTMLSelectElement>$('noise-suppression')).value;            
+            const noiseSuppression = (<HTMLSelectElement>$('denoise-mode')).value;
             if (noiseSuppression !== 'webrtc') {
               try {
                 const useDeepFilter = noiseSuppression === 'deepfilter';
-
                 const denoiseProcessor = new DenoiseProcessor({
                   deepfilter: { enable: useDeepFilter },
-                  wasmBasePath: window.location.pathname
+                  wasmBasePath: window.location.pathname,
+                  debugLogs: true,
+                  vadLogs: false
                 });
                 await pub.track.setProcessor(denoiseProcessor);
                 await denoiseProcessor.setEnabled(true);
-                
+
               } catch (error) {
                 console.error("Failed to initialize denoise processor:", error);
               }
             }
-            console.log("Denoise mode successfully applied:", noiseSuppression);            
+            console.log("Denoise mode successfully applied:", noiseSuppression);
+          } else if (pub.source === Track.Source.Camera) {
+            const deviceId = pub.track.mediaStreamTrack.getSettings().deviceId;
+            if (deviceId) {
+              state.defaultDevices.set('videoinput', deviceId);
+            }
+          }
         }
 
         const track = pub.track as LocalAudioTrack;
@@ -600,7 +625,28 @@ const appActions = {
     state.defaultDevices.set(kind, deviceId);
 
     if (currentRoom) {
-      await currentRoom.switchActiveDevice(kind, deviceId);
+      if (kind === 'audiooutput') {
+        // Audio output can be switched directly
+        await currentRoom.switchActiveDevice(kind, deviceId);
+      } else if (kind === 'videoinput') {
+        // For video input, restart the track with new device
+        const videoPub = currentRoom.localParticipant.getTrackPublication(Track.Source.Camera);
+        if (videoPub?.videoTrack) {
+          const options: VideoCaptureOptions = {
+            deviceId: { exact: deviceId },
+            resolution: VideoPresets.h720.resolution,
+          };
+          await videoPub.videoTrack.restartTrack(options);
+          appendLog('Switched video device to:', deviceId);
+        }
+      } else if (kind === 'audioinput') {
+        // For audio input, restart the track with new device
+        const audioPub = currentRoom.localParticipant.getTrackPublication(Track.Source.Microphone);
+        if (audioPub?.audioTrack) {
+          await audioPub.audioTrack.restartTrack({ deviceId: { exact: deviceId } });
+          appendLog('Switched audio device to:', deviceId);
+        }
+      }
     }
   },
 
@@ -655,7 +701,7 @@ const appActions = {
       return;
     }
 
-    const noiseSuppression = (<HTMLSelectElement>$('noise-suppression')).value;
+    const noiseSuppression = (<HTMLSelectElement>$('denoise-mode')).value;
     if (noiseSuppression === 'webrtc') {
       await (audioTrack.track as any).stopProcessor();
       console.log('Denoise reverted back to WebRTC');
@@ -1179,19 +1225,19 @@ function populateSelect(
   devices: MediaDeviceInfo[],
   selectedDeviceId?: string,
 ) {
-  /*if(element != null)
+  if(element != null)
   {
-  // clear all elements
-  element.innerHTML = '';
-  }*/
+    // clear all elements
+    element.innerHTML = '';
+  }
   for (const device of devices) {
     const option = document.createElement('option');
-    option.text = device.label;
+    option.text = device.label || `${device.deviceId} (${device.kind})`;
     option.value = device.deviceId;
     if (device.deviceId === selectedDeviceId) {
       option.selected = true;
     }
-    //element.appendChild(option);
+    element.appendChild(option);
   }
 }
 

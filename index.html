@@ -71,15 +71,28 @@
           <label for="e2ee" class="form-check-label"> E2E Encryption </label>
         </div>
         <div>
-          <select id="preferred-codec" class="custom-select" style="width: auto"></select>
+          <input type="checkbox" class="form-check-input" id="echo-cancellation" checked />
+          <label for="echo-cancellation" class="form-check-label"> AEC </label>
         </div>
         <div>
-          <label for="qulaity" class="form-check-label"> PreferredQuality </label>
-          <select
-                  id="preferred-quality"
-                  class="custom-select"
-                  style="width: auto"
-          >
+          <input type="checkbox" class="form-check-input" id="noise-suppression" />
+          <label for="noise-suppression" class="form-check-label"> ANS </label>
+        </div>
+        <div>
+          <input type="checkbox" class="form-check-input" id="auto-gain-control" checked />
+          <label for="auto-gain-control" class="form-check-label"> AGC </label>
+        </div>
+      </div>
+
+      <!-- media preferences -->
+      <div id="media-preferences-area">
+        <div>
+          <label for="preferred-codec"> Preferred Codec </label>
+          <select id="preferred-codec" class="custom-select"></select>
+        </div>
+        <div>
+          <label for="preferred-quality"> Preferred Quality </label>
+          <select id="preferred-quality" class="custom-select">
             <option value="1080">1080</option>
             <option value="720" selected>720</option>
             <option value="540">540</option>
@@ -88,11 +101,10 @@
           </select>
         </div>
         <div>
-          <label for="noise-suppression" class="form-check-label"> Noise Suppression </label>
+          <label for="denoise-mode"> Denoise Mode </label>
           <select
-                  id="noise-suppression"
+                  id="denoise-mode"
                   class="custom-select"
-                  style="width: auto"
                   onchange="appActions.changeNoiseSuppression()"
           >
             <option value="deepfilter" selected>DeepFilterNet</option>
@@ -100,13 +112,40 @@
             <option value="webrtc">WebRTC</option>
           </select>
         </div>
-        <!--<div>
-          <select id="preferred-codec" class="custom-select" style="width: auto">
-            <option value="vp8" selected>VP8</option>
-            <option value="h264">H.264</option>
-            <option value="av1">AV1</option>
+      </div>
+
+      <!-- inputs -->
+      <div id="inputs-area">
+        <div>
+          <label for="video-input">Camera</label>
+          <select
+                  id="video-input"
+                  class="custom-select"
+                  onchange="appActions.handleDeviceSelected(event)"
+          >
+            <option selected>Video Input (default)</option>
           </select>
-        </div>-->
+        </div>
+        <div>
+          <label for="audio-input">Microphone</label>
+          <select
+                  id="audio-input"
+                  class="custom-select"
+                  onchange="appActions.handleDeviceSelected(event)"
+          >
+            <option selected>Audio Input (default)</option>
+          </select>
+        </div>
+        <div>
+          <label for="audio-output">Speaker</label>
+          <select
+                  id="audio-output"
+                  class="custom-select"
+                  onchange="appActions.handleDeviceSelected(event)"
+          >
+            <option selected>Audio Output (default)</option>
+          </select>
+        </div>
       </div>
 
       <!-- actions -->
@@ -239,36 +278,6 @@
              <option value="15">15</option>
              <option value="8">8</option>
            </select>-->
-        </div>
-      </div>
-
-      <div id="inputs-area">
-        <!-- <div>
-           <select
-             id="video-input"
-             class="custom-select"
-             onchange="appActions.handleDeviceSelected(event)"
-           >
-             <option selected>Video Input (default)</option>
-           </select>
-         </div>
-         <div>
-           <select
-             id="audio-input"
-             class="custom-select"
-             onchange="appActions.handleDeviceSelected(event)"
-           >
-             <option selected>Audio Input (default)</option>
-           </select>
-         </div>-->
-        <div>
-          <select
-                  id="audio-output"
-                  class="custom-select"
-                  onchange="appActions.handleDeviceSelected(event)"
-          >
-            <option selected>Audio Output (default)</option>
-          </select>
         </div>
       </div>
     </div>
