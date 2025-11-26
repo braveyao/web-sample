@@ -1,5 +1,5 @@
 {
-  "name": "web-sample",
+  "name": "web-demo",
   "version": "1.0.0",
   "private": true,
   "description": "WebRTC Video Conferencing Sample Application",
@@ -8,7 +8,7 @@
     "build": "vite build",
     "dev": "vite serve --port 8080 --open",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d dist --dest web-sample"
+    "deploy": "gh-pages -d dist --dest web-demo"
   },
   "dependencies": {
     "denoise-plugin": "file:../denoise-plugin-1.0.0.tgz",
