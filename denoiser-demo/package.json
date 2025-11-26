@@ -1,0 +1,18 @@
+{
+  "name": "denoiser-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Denoiser Demo Application",
+  "scripts": {
+    "dev": "python3 -m http.server 8080",
+    "build": "echo 'No build step required'",
+    "preview": "python3 -m http.server 8080",
+    "deploy": "gh-pages -d . --dest denoiser-demo"
+  },
+  "dependencies": {
+    "@braveyao/denoiser": "file:../denoiser"
+  },
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
+}
