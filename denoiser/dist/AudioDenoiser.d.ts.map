@@ -1,0 +1,1 @@
+{"version":3,"file":"AudioDenoiser.d.ts","sourceRoot":"","sources":["../src/AudioDenoiser.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,aAAa;IAE1B,UAAU,IAAI,OAAO,CAAC,IAAI,CAAC,CAAC;IAE5B,iBAAiB,CAAC,QAAQ,EAAE,YAAY,GAAG,MAAM,CAAA;IAEjD,eAAe,IAAI,MAAM,CAAC;IAE1B,OAAO,IAAI,IAAI,CAAC;CACnB"}

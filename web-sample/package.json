@@ -1,0 +1,17 @@
+{
+  "name": "web-sample",
+  "version": "1.0.0",
+  "private": true,
+  "description": "WebRTC Video Conferencing Sample Application",
+  "scripts": {
+    "clean": "tsc --build --clean",
+    "build": "vite build",
+    "dev": "vite serve --port 8080 --open",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist --dest web-sample"
+  },
+  "dependencies": {
+    "denoise-plugin": "file:../denoise-plugin-1.0.0.tgz",
+    "ecprt-client-sdk": "https://artifactory-builds.oci.oraclecorp.com/cgbu_ecprt-release-npm-local/ecprt-livekit-client-sdk-js/ecprt-client-sdk-25.3.8.tgz"
+  }
+}
