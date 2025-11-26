@@ -21,6 +21,7 @@
   "workspaces": [
     "denoiser",
     "web-sample",
+    "web-demo",
     "denoiser-demo"
   ]
 }

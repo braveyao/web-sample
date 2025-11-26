@@ -1,0 +1,15 @@
+{
+  "extends": "../tsconfig.json",
+  "include": ["sample.ts"],
+  "typedocOptions": {
+    "entryPoints": ["sample.ts"],
+    "excludeInternal": true,
+    "excludePrivate": true,
+    "excludeProtected": true,
+    "excludeExternals": true,
+    "includeVersion": true,
+    "name": "Web Sample Application",
+    "out": "docs",
+    "theme": "default"
+  }
+}
