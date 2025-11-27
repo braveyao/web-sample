@@ -163,7 +163,8 @@
 .participant .volume-control > input {
   width: 16px;
   height: 40%;
-  -webkit-appearance: slider-vertical; /* Chromium */
+  writing-mode: vertical-lr;
+  direction: rtl;
 }
 
 .participant .volume-meter {

@@ -1,0 +1,38 @@
+{
+  "name": "@braveyao/denoiser",
+  "version": "1.0.0",
+  "description": "Audio denoising processor using Web Audio API and AudioWorklet",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build:worklet": "rollup -c --configWorklet",
+    "build:main": "rollup -c",
+    "build": "npm run build:worklet && npm run build:main",
+    "watch": "npm run build:worklet && rollup -c -w"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-replace": "^5.0.5",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@rollup/plugin-typescript": "^11.1.5",
+    "@types/node": "^20.10.5",
+    "rollup": "^4.9.6",
+    "tslib": "^2.6.2",
+    "typescript": "^4.9.5"
+  },
+  "keywords": [
+    "audio",
+    "denoising",
+    "webaudio",
+    "audioworklet",
+    "noise-reduction"
+  ],
+  "author": "Brave Yao",
+  "license": "MIT"
+}

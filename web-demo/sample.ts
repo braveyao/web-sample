@@ -314,7 +314,7 @@ const appActions = {
                 const useDeepFilter = noiseSuppression === 'deepfilter';
                 const denoiseProcessor = new DenoiseProcessor({
                   deepfilter: { enable: useDeepFilter },
-                  wasmBasePath: window.location.pathname,
+                  wasmBasePath: window.location.hostname.includes('github.io') ? '/web-sample/' : '/',
                   debugLogs: true,
                   vadLogs: false
                 });
@@ -714,7 +714,7 @@ const appActions = {
       const useDeepFilter = noiseSuppression === 'deepfilter';
       const denoiseProcessor = new DenoiseProcessor({
         deepfilter: { enable: useDeepFilter },
-        wasmBasePath: window.location.pathname
+        wasmBasePath: window.location.hostname.includes('github.io') ? '/web-sample/' : '/'
       });
       await (audioTrack.track as any).setProcessor(denoiseProcessor);
       await denoiseProcessor.setEnabled(true);

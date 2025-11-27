@@ -1,32 +1,32 @@
 {
-  "name": "web-sample",
+  "name": "braveyao-web-projects",
   "homepage": "https://braveyao.github.io/web-sample/",
   "version": "1.0.0",
   "private": true,
-  "description": "",
+  "description": "Brave Yao's Web Development Projects Monorepo",
   "devDependencies": {
+    "gh-pages": "^6.3.0",
     "typescript": "4.9.5",
     "vite": "5.3.2"
   },
   "scripts": {
     "bootstrap": "npm install",
-    "clean": "tsc --build --clean",
-    "build": "vite build",
+    "clean": "npm run clean --workspaces",
+    "build": "npm run build --workspaces",
+    "dev": "npm run dev --workspaces",
     "sample": "vite serve --port 8080 --open",
-    "predeploy": "npm run build",
+    "predeploy": "npm run build && mkdir -p dist dist/web-demo dist/denoiser-demo && cp -r web-demo/dist/* dist/web-demo/ && cp -r denoiser-demo/dist/index.html dist/denoiser-demo/ && cp -r denoiser-demo/dist/assets dist/denoiser-demo/ && cp index.html base.css dist/ && cp public/* dist/",
     "deploy": "gh-pages -d dist"
   },
-  "author": "",
+  "author": "Brave Yao",
   "license": "ISC",
+  "workspaces": [
+    "denoiser",
+    "web-sample",
+    "web-demo",
+    "denoiser-demo"
+  ],
   "dependencies": {
-    "denoise-plugin": "file:denoise-plugin-1.0.0.tgz",
-    "ecprt-client-sdk": "https://artifactory-builds.oci.oraclecorp.com/cgbu_ecprt-release-npm-local/ecprt-livekit-client-sdk-js/ecprt-client-sdk-25.3.8.tgz",
-    "gh-pages": "^6.3.0",
-    "typescript": "4.9.5"
-  },
-  "workspaces": {
-    "packages": [
-      "/*"
-    ]
+    "denoise-plugin": "file:denoise-plugin-1.0.0.tgz"
   }
 }
