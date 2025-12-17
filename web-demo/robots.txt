@@ -1,0 +1,11 @@
+User-agent: *
+Disallow: /*.kef$
+Disallow: /*.wasm$
+Disallow: /*.js$
+Disallow: /*.map$
+Disallow: /dist/
+Disallow: /node_modules/
+Allow: /
+
+# Disallow specific model files
+Disallow: /*model*
